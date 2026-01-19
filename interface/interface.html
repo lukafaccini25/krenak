@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dicionário Krenak-Português</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Avenir:wght@300&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Avenir', sans-serif;
+            font-weight: 300;
+            background: white;
+            color: #222A2B;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #015537;
+            color: white;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 2rem;
+            text-align: left;
+        }
+
+        .search-container {
+            padding: 1.5rem 2rem;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            font-family: 'Avenir', sans-serif;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #02AA6F;
+        }
+
+        .entries-container {
+            padding: 1rem 2rem;
+        }
+
+        .entry {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+            transition: box-shadow 0.3s;
+        }
+
+        .entry:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .entry-header {
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            transition: background 0.2s;
+        }
+
+        .entry-header:hover {
+            background: #f8f9fa;
+        }
+
+        .entry-main {
+            flex: 1;
+        }
+
+        .krenak-word {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #F05B29;
+            margin-bottom: 0.25rem;
+        }
+
+        .portuguese {
+            color: #222A2B;
+            font-size: 0.95rem;
+        }
+
+        .expand-icon {
+            color: #015537;
+            font-size: 1.25rem;
+            transition: transform 0.3s;
+        }
+
+        .entry.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .entry-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .entry.expanded .entry-details {
+            max-height: 500px;
+        }
+
+        .details-content {
+            padding: 1.25rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .detail-row {
+            margin-bottom: 1rem;
+        }
+
+        .detail-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: #015537;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            color: #222A2B;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #222A2B;
+        }
+
+        .no-results-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #222A2B;
+        }
+
+        .error {
+            text-align: center;
+            padding: 3rem;
+            color: #F05B29;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dicionário Krenak-Português</h1>
+        </header>
+
+        <div class="search-container">
+            <input 
+                type="text" 
+                class="search-bar" 
+                id="searchInput" 
+                placeholder="Buscar em Krenak ou Português..."
+            >
+        </div>
+
+        <div class="entries-container" id="entriesContainer">
+            <div class="loading">Carregando dicionário...</div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>
+        // Update this URL to point to your CSV file on GitHub
+        // Example: 'https://raw.githubusercontent.com/yourusername/yourrepo/main/dictionary.csv'
+        const CSV_URL = 'YOUR_GITHUB_RAW_CSV_URL_HERE';
+
+        let allEntries = [];
+
+        function loadCSV() {
+            Papa.parse(CSV_URL, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    allEntries = results.data.filter(row => row.Krenak && row.Portugues);
+                    renderEntries(allEntries);
+                },
+                error: function(error) {
+                    document.getElementById('entriesContainer').innerHTML = `
+                        <div class="error">
+                            <p>Erro ao carregar o dicionário.</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Verifique se a URL do CSV está correta.</p>
+                        </div>
+                    `;
+                    console.error('Error loading CSV:', error);
+                }
+            });
+        }
+
+        function renderEntries(entries) {
+            const container = document.getElementById('entriesContainer');
+            
+            if (entries.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">🔍</div>
+                        <p>Nenhuma entrada encontrada</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = entries.map((entry, index) => `
+                <div class="entry" data-index="${index}">
+                    <div class="entry-header" onclick="toggleEntry(${index})">
+                        <div class="entry-main">
+                            <div class="krenak-word">${entry.Krenak}</div>
+                            <div class="portuguese">${entry.Portugues}</div>
+                        </div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="entry-details">
+                        <div class="details-content">
+                            ${entry.Krenak ? `
+                                <div class="detail-row">
+                                    <div class="detail-label">Krenak</div>
+                                    <div class="detail-value">${entry.Krenak}</div>
+                                </div>
+                            ` : ''}
+                            ${entry.Ortografia_Original ? `
+                                <div class="detail-row">
+                                    <div class="detail-label">Ortografia Original</div>
+                                    <div class="detail-value">${entry.Ortografia_Original}</div>
+                                </div>
+                            ` : ''}
+                            ${entry.Portugues ? `
+                                <div class="detail-row">
+                                    <div class="detail-label">Português</div>
+                                    <div class="detail-value">${entry.Portugues}</div>
+                                </div>
+                            ` : ''}
+                            ${entry.Notas ? `
+                                <div class="detail-row">
+                                    <div class="detail-label">Notas</div>
+                                    <div class="detail-value">${entry.Notas}</div>
+                                </div>
+                            ` : ''}
+                            ${entry.Fonte ? `
+                                <div class="detail-row">
+                                    <div class="detail-label">Fonte</div>
+                                    <div class="detail-value">${entry.Fonte}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleEntry(index) {
+            const entry = document.querySelector(`[data-index="${index}"]`);
+            entry.classList.toggle('expanded');
+        }
+
+        function searchEntries(query) {
+            const lowerQuery = query.toLowerCase().trim();
+            
+            if (!lowerQuery) {
+                renderEntries(allEntries);
+                return;
+            }
+
+            const filtered = allEntries.filter(entry => 
+                entry.Krenak.toLowerCase().includes(lowerQuery) ||
+                entry.Portugues.toLowerCase().includes(lowerQuery) ||
+                (entry.Ortografia_Original && entry.Ortografia_Original.toLowerCase().includes(lowerQuery))
+            );
+
+            renderEntries(filtered);
+        }
+
+        // Initialize
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchEntries(e.target.value);
+        });
+
+        loadCSV();
+    </script>
+</body>
+</html>
