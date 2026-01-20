@@ -425,13 +425,12 @@
                 url: 'data_rudolph.csv',
                 name: 'Rudolph (1909)',
                 class: 'rudolph',
-                // Adjust these column names based on actual Rudolph CSV structure
                 columns: {
-                    krenak: 'Krenak',  // Adjust as needed
-                    portuguese: 'Portuguese',  // Adjust as needed
-                    original: 'Original',  // Adjust as needed
-                    notes: 'Notes',  // Adjust as needed
-                    source: 'Source'  // Adjust as needed
+                    krenak: 'Krenak',
+                    portuguese: 'Português',
+                    original: null,  // Not available in Rudolph
+                    notes: 'Notas',
+                    source: null  // Not available in Rudolph
                 }
             }
         };
@@ -516,11 +515,11 @@
             return {
                 sourceType: sourceType,
                 sourceName: sourceConfig.name,
-                krenak: row[cols.krenak] || '',
-                portuguese: row[cols.portuguese] || '',
-                original: row[cols.original] || '',
-                notes: row[cols.notes] || '',
-                source: row[cols.source] || '',
+                krenak: (row[cols.krenak] || '').trim(),
+                portuguese: (row[cols.portuguese] || '').trim(),
+                original: cols.original ? (row[cols.original] || '').trim() : '',
+                notes: cols.notes ? (row[cols.notes] || '').trim() : '',
+                source: cols.source ? (row[cols.source] || '').trim() : '',
                 rawData: row
             };
         }
@@ -535,9 +534,14 @@
                             const entries = results.data
                                 .filter(row => {
                                     const cols = config.columns;
-                                    return row[cols.krenak] && row[cols.portuguese];
+                                    const krenakWord = row[cols.krenak];
+                                    const portugueseWord = row[cols.portuguese];
+                                    return krenakWord && portugueseWord && 
+                                           krenakWord.trim() !== '' && 
+                                           portugueseWord.trim() !== '';
                                 })
                                 .map(row => normalizeEntry(row, config, sourceType));
+                            console.log(`Loaded ${entries.length} entries from ${config.name}`);
                             resolve(entries);
                         },
                         error: function(error) {
