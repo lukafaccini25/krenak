@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vocabulário Krenak-Português</title>
+    <title>Dicionário Krenak-Português</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Avenir:wght@300&display=swap" rel="stylesheet">
     <style>
         * {
@@ -18,6 +17,7 @@
             font-weight: 300;
             background: white;
             color: #222A2B;
+            padding-top: 200px; /* Space for fixed header */
         }
 
         .container {
@@ -28,9 +28,15 @@
         }
 
         header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
             background: #015537;
             color: white;
             padding: 2rem;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         h1 {
@@ -38,12 +44,25 @@
             font-weight: 600;
             font-size: 2rem;
             text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
         }
 
         .search-container {
+            position: fixed;
+            top: 88px; /* Adjust based on header height */
+            left: 0;
+            right: 0;
             padding: 1.5rem 2rem;
-            background: #f8f9fa;
+            background: white;
             border-bottom: 2px solid #e9ecef;
+            z-index: 99;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .search-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
         }
 
         .search-bar {
@@ -59,6 +78,51 @@
         .search-bar:focus {
             outline: none;
             border-color: #02AA6F;
+        }
+
+        .alphabet-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .letter-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #dee2e6;
+            background: white;
+            color: #222A2B;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .letter-btn:hover {
+            background: #02AA6F;
+            color: white;
+            border-color: #02AA6F;
+        }
+
+        .letter-btn.active {
+            background: #015537;
+            color: white;
+            border-color: #015537;
+        }
+
+        .letter-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .letter-btn.disabled:hover {
+            background: white;
+            color: #222A2B;
+            border-color: #dee2e6;
         }
 
         .entries-container {
@@ -185,28 +249,80 @@
 <body>
     <div class="container">
         <header>
-            <h1>Vocabulário Krenak-Português</h1>
+            <h1>Dicionário Krenak-Português</h1>
         </header>
 
         <div class="search-container">
-            <input 
-                type="text" 
-                class="search-bar" 
-                id="searchInput" 
-                placeholder="Buscar em Krenak ou Português..."
-            >
+            <div class="search-wrapper">
+                <input 
+                    type="text" 
+                    class="search-bar" 
+                    id="searchInput" 
+                    placeholder="Buscar em Krenak ou Português..."
+                >
+                <div class="alphabet-bar" id="alphabetBar"></div>
+            </div>
         </div>
 
         <div class="entries-container" id="entriesContainer">
-            <div class="loading">Carregando vocabulário...</div>
+            <div class="loading">Carregando dicionário...</div>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
+        // Update this path to match your CSV file location in the repository
+        // If the CSV is in the same folder as this HTML file, just use the filename
+        // If it's in a subfolder, use: 'subfolder/dictionary.csv'
         const CSV_URL = 'data.csv';
 
         let allEntries = [];
+        let activeLetter = null;
+
+        function createAlphabetBar() {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+            const alphabetBar = document.getElementById('alphabetBar');
+            
+            // Get first letters that exist in the data
+            const availableLetters = new Set(
+                allEntries.map(entry => entry.Krenak.charAt(0).toUpperCase())
+            );
+            
+            alphabetBar.innerHTML = alphabet.map(letter => {
+                const isAvailable = availableLetters.has(letter);
+                return `<button 
+                    class="letter-btn ${!isAvailable ? 'disabled' : ''}" 
+                    onclick="filterByLetter('${letter}')"
+                    ${!isAvailable ? 'disabled' : ''}
+                >${letter}</button>`;
+            }).join('');
+        }
+
+        function filterByLetter(letter) {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.value = ''; // Clear search
+            
+            // Toggle letter filter
+            if (activeLetter === letter) {
+                activeLetter = null;
+                renderEntries(allEntries);
+            } else {
+                activeLetter = letter;
+                const filtered = allEntries.filter(entry => 
+                    entry.Krenak.charAt(0).toUpperCase() === letter
+                );
+                renderEntries(filtered);
+            }
+            
+            // Update button states
+            document.querySelectorAll('.letter-btn').forEach(btn => {
+                if (btn.textContent === letter && activeLetter === letter) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
 
         function loadCSV() {
             Papa.parse(CSV_URL, {
@@ -214,12 +330,13 @@
                 header: true,
                 complete: function(results) {
                     allEntries = results.data.filter(row => row.Krenak && row.Portugues);
+                    createAlphabetBar();
                     renderEntries(allEntries);
                 },
                 error: function(error) {
                     document.getElementById('entriesContainer').innerHTML = `
                         <div class="error">
-                            <p>Erro ao carregar o vocabulário.</p>
+                            <p>Erro ao carregar o dicionário.</p>
                             <p style="font-size: 0.9rem; margin-top: 0.5rem;">Verifique se a URL do CSV está correta.</p>
                         </div>
                     `;
@@ -295,6 +412,14 @@
 
         function searchEntries(query) {
             const lowerQuery = query.toLowerCase().trim();
+            
+            // Clear letter filter when searching
+            if (lowerQuery) {
+                activeLetter = null;
+                document.querySelectorAll('.letter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+            }
             
             if (!lowerQuery) {
                 renderEntries(allEntries);
