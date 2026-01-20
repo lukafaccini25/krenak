@@ -17,7 +17,7 @@
             font-weight: 300;
             background: white;
             color: #222A2B;
-            padding-top: 200px; /* Space for fixed header */
+            padding-top: 220px; /* Space for fixed header */
         }
 
         .container {
@@ -50,7 +50,7 @@
 
         .search-container {
             position: fixed;
-            top: 88px; /* Adjust based on header height */
+            top: 100px; /* Adjust based on header height */
             left: 0;
             right: 0;
             padding: 1.5rem 2rem;
@@ -271,16 +271,13 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
-        // Update this path to match your CSV file location in the repository
-        // If the CSV is in the same folder as this HTML file, just use the filename
-        // If it's in a subfolder, use: 'subfolder/dictionary.csv'
         const CSV_URL = 'data.csv';
 
         let allEntries = [];
         let activeLetter = null;
 
         function createAlphabetBar() {
-            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+            const alphabet = 'ABDEGIJKMNOPRSTUÑ'.split('');
             const alphabetBar = document.getElementById('alphabetBar');
             
             // Get first letters that exist in the data
