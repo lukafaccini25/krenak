@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dicionário Krenak</title>
+    <title>Dicionário Interativo Krenak-Português</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -239,7 +239,7 @@
 <body>
     <div class="header">
         <div class="header-content">
-            <h1>Dicionário Krenak</h1>
+            <h1>Dicionário Interativo Krenak-Português</h1>
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Buscar em Krenak ou Português...">
             </div>
@@ -272,7 +272,7 @@
             },
             error: function(error) {
                 document.getElementById('entriesContainer').innerHTML = 
-                    '<div class="no-results">Erro ao carregar o dicionário. Verifique se o arquivo data.csv está no diretório correto.</div>';
+                    '<div class="no-results">Erro ao carregar o dicionário.</div>';
             }
         });
 
