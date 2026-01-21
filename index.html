@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dicionário Krenak-Português</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Avenir:wght@300&display=swap" rel="stylesheet">
+    <title>Dicionário Krenak</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,654 +13,398 @@
         }
 
         body {
-            font-family: 'Avenir', sans-serif;
+            font-family: 'Avenir', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-weight: 300;
-            background: white;
-            color: #222A2B;
-            padding-top: 260px;
+            background-color: #ffffff;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(2, 170, 111, 0.02) 10px, rgba(2, 170, 111, 0.02) 20px),
+                repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(1, 85, 55, 0.02) 10px, rgba(1, 85, 55, 0.02) 20px);
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            min-height: 100vh;
-        }
-
-        header {
+        .header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             background: #015537;
-            color: white;
-            padding: 2rem;
-            z-index: 100;
+            padding: 1.5rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         h1 {
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
-            font-size: 2rem;
-            text-align: left;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .search-container {
-            position: fixed;
-            top: 100px;
-            left: 0;
-            right: 0;
-            padding: 1.5rem 2rem;
-            background: white;
-            border-bottom: 2px solid #e9ecef;
-            z-index: 99;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .search-wrapper {
-            max-width: 900px;
-            margin: 0 auto;
+            color: #ffffff;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
         }
 
         .search-bar {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            font-size: 1rem;
-            font-family: 'Avenir', sans-serif;
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
-            transition: border-color 0.3s;
-        }
-
-        .search-bar:focus {
-            outline: none;
-            border-color: #02AA6F;
-        }
-
-        .filters-row {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-            align-items: center;
-        }
-
-        .source-filters {
             display: flex;
             gap: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        .source-btn {
+        .search-bar input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #02AA6F;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Avenir', sans-serif;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #F05B29;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
             padding: 0.5rem 1rem;
-            border: 2px solid #dee2e6;
-            background: white;
-            color: #222A2B;
+            border: 2px solid #02AA6F;
+            background: #ffffff;
+            color: #015537;
             border-radius: 6px;
             cursor: pointer;
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s;
         }
 
-        .source-btn.frasetto {
-            border-color: #F05B29;
-        }
-
-        .source-btn.frasetto.active {
-            background: #F05B29;
-            color: white;
-        }
-
-        .source-btn.rudolph {
-            border-color: #0277BD;
-        }
-
-        .source-btn.rudolph.active {
-            background: #0277BD;
-            color: white;
-        }
-
-        .source-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .source-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .source-indicator.frasetto {
-            background: #F05B29;
-        }
-
-        .source-indicator.rudolph {
-            background: #0277BD;
-        }
-
-        .alphabet-bar {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            flex: 1;
-            justify-content: flex-end;
-        }
-
-        .letter-btn {
-            width: 32px;
-            height: 32px;
-            border: 1px solid #dee2e6;
-            background: white;
-            color: #222A2B;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-        }
-
-        .letter-btn:hover {
+        .filter-btn:hover {
             background: #02AA6F;
-            color: white;
-            border-color: #02AA6F;
+            color: #ffffff;
         }
 
-        .letter-btn.active {
-            background: #015537;
-            color: white;
-            border-color: #015537;
+        .filter-btn.active {
+            background: #F05B29;
+            border-color: #F05B29;
+            color: #ffffff;
         }
 
-        .letter-btn.disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .letter-btn.disabled:hover {
-            background: white;
-            color: #222A2B;
-            border-color: #dee2e6;
-        }
-
-        .entries-container {
-            padding: 2rem 2rem;
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            padding-top: 240px;
         }
 
         .entry {
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            margin-bottom: 0.75rem;
-            overflow: hidden;
-            transition: box-shadow 0.3s;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s;
             position: relative;
-        }
-
-        .entry.frasetto {
-            border-left: 3px solid #F05B29;
-        }
-
-        .entry.rudolph {
-            border-left: 3px solid #0277BD;
+            border-left: 4px solid #02AA6F;
         }
 
         .entry:hover {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+
+        .entry.expanded {
+            cursor: default;
         }
 
         .entry-header {
-            padding: 1rem 1.25rem;
-            cursor: pointer;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            background: white;
-            transition: background 0.2s;
-        }
-
-        .entry-header:hover {
-            background: #f8f9fa;
+            align-items: flex-start;
+            gap: 1rem;
         }
 
         .entry-main {
             flex: 1;
         }
 
-        .krenak-word {
-            font-size: 1.15rem;
+        .krenak {
+            font-family: 'Poppins', sans-serif;
             font-weight: 600;
             color: #015537;
-            margin-bottom: 0.25rem;
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
         }
 
-        .portuguese {
+        .portugues {
             color: #222A2B;
-            font-size: 0.95rem;
-        }
-
-        .entry-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+            font-size: 1.1rem;
         }
 
         .source-badge {
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
-            font-size: 0.7rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 0.75rem;
+            white-space: nowrap;
         }
 
-        .source-badge.frasetto {
-            background: #FFE8E0;
-            color: #F05B29;
-        }
-
-        .source-badge.rudolph {
-            background: #E1F5FE;
-            color: #0277BD;
-        }
-
-        .expand-icon {
-            color: #015537;
-            font-size: 1.25rem;
-            transition: transform 0.3s;
-        }
-
-        .entry.expanded .expand-icon {
-            transform: rotate(180deg);
-        }
+        .source-frasetto { background: #02AA6F; color: white; }
+        .source-cma { background: #F05B29; color: white; }
+        .source-mwn { background: #015537; color: white; }
+        .source-cfh { background: #222A2B; color: white; }
+        .source-rudolph { background: #F05B29; color: white; }
 
         .entry-details {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease;
-            background: #f8f9fa;
         }
 
         .entry.expanded .entry-details {
-            max-height: 500px;
-        }
-
-        .details-content {
-            padding: 1.25rem;
-            border-top: 1px solid #e9ecef;
+            max-height: 1000px;
+            padding-top: 1rem;
+            border-top: 1px solid #02AA6F;
+            margin-top: 1rem;
         }
 
         .detail-row {
-            margin-bottom: 1rem;
-        }
-
-        .detail-row:last-child {
-            margin-bottom: 0;
+            margin-bottom: 0.8rem;
         }
 
         .detail-label {
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
             color: #015537;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
         }
 
-        .detail-value {
+        .detail-content {
             color: #222A2B;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        .details-source {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid #dee2e6;
-            font-size: 0.85rem;
-            color: #666;
+            line-height: 1.6;
         }
 
         .no-results {
             text-align: center;
             padding: 3rem;
             color: #222A2B;
-        }
-
-        .no-results-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.3;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            color: #222A2B;
-        }
-
-        .error {
-            text-align: center;
-            padding: 3rem;
-            color: #F05B29;
+            font-size: 1.1rem;
         }
 
         @media (max-width: 768px) {
-            .filters-row {
+            .header {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            .content {
+                padding-top: 260px;
+            }
+
+            .krenak {
+                font-size: 1.1rem;
+            }
+
+            .portugues {
+                font-size: 1rem;
+            }
+
+            .entry-header {
                 flex-direction: column;
-                align-items: stretch;
             }
 
-            .alphabet-bar {
-                justify-content: center;
+            .source-badge {
+                align-self: flex-start;
             }
+        }
 
-            .source-filters {
-                justify-content: center;
+        @media (max-width: 400px) {
+            .content {
+                padding-top: 300px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Dicionário Krenak-Português</h1>
-        </header>
-
-        <div class="search-container">
-            <div class="search-wrapper">
-                <input 
-                    type="text" 
-                    class="search-bar" 
-                    id="searchInput" 
-                    placeholder="Buscar em Krenak ou Português..."
-                >
-                <div class="filters-row">
-                    <div class="source-filters">
-                        <button class="source-btn frasetto active" onclick="toggleSource('frasetto')">
-                            <span class="source-indicator frasetto"></span>
-                            Frasetto (2018)
-                        </button>
-                        <button class="source-btn rudolph active" onclick="toggleSource('rudolph')">
-                            <span class="source-indicator rudolph"></span>
-                            Rudolph (1909)
-                        </button>
-                    </div>
-                    <div class="alphabet-bar" id="alphabetBar"></div>
-                </div>
+    <div class="header">
+        <div class="header-content">
+            <h1>Dicionário Krenak</h1>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Buscar em Krenak ou Português...">
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">Todas as Fontes</button>
+                <button class="filter-btn" data-filter="frasetto">Frasetto (2018)</button>
+                <button class="filter-btn" data-filter="rudolph">Rudolph (1909)</button>
             </div>
         </div>
+    </div>
 
-        <div class="entries-container" id="entriesContainer">
-            <div class="loading">Carregando dicionário...</div>
-        </div>
+    <div class="content" id="entriesContainer">
+        <div class="no-results">Carregando...</div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
-        // CSV configurations
-        const CSV_SOURCES = {
-            frasetto: {
-                url: 'data_frasetto.csv',
-                name: 'Frasetto (2018)',
-                class: 'frasetto',
-                columns: {
-                    krenak: 'Krenak',
-                    portuguese: 'Portugues',
-                    original: 'Ortografia_Original',
-                    notes: 'Notas',
-                    source: 'Fonte'
-                }
-            },
-            rudolph: {
-                url: 'data_rudolph.csv',
-                name: 'Rudolph (1909)',
-                class: 'rudolph',
-                columns: {
-                    krenak: 'Krenak',
-                    portuguese: 'Português',
-                    original: null,  // Not available in Rudolph
-                    notes: 'Notas',
-                    source: null  // Not available in Rudolph
-                }
-            }
-        };
-
         let allEntries = [];
-        let activeLetter = null;
-        let activeSources = new Set(['frasetto', 'rudolph']);
+        let currentFilter = 'all';
 
-        function toggleSource(sourceName) {
-            const btn = document.querySelector(`.source-btn.${sourceName}`);
-            
-            if (activeSources.has(sourceName)) {
-                activeSources.delete(sourceName);
-                btn.classList.remove('active');
-            } else {
-                activeSources.add(sourceName);
-                btn.classList.add('active');
+        // Load and parse CSV
+        Papa.parse('data.csv', {
+            download: true,
+            header: true,
+            encoding: 'UTF-8',
+            complete: function(results) {
+                allEntries = results.data.filter(row => row.Krenak && row.Krenak.trim());
+                allEntries.sort((a, b) => a.Krenak.localeCompare(b.Krenak, 'pt-BR'));
+                displayEntries(allEntries);
+            },
+            error: function(error) {
+                document.getElementById('entriesContainer').innerHTML = 
+                    '<div class="no-results">Erro ao carregar o dicionário. Verifique se o arquivo data.csv está no diretório correto.</div>';
             }
+        });
 
-            // Re-render with current filters
-            const searchQuery = document.getElementById('searchInput').value;
-            if (searchQuery.trim()) {
-                searchEntries(searchQuery);
-            } else if (activeLetter) {
-                filterByLetter(activeLetter, true);
-            } else {
-                renderEntries(filterByActiveSources(allEntries));
+        function getSourceBadge(fonte) {
+            if (!fonte) return '';
+            
+            const fonteUpper = fonte.toUpperCase();
+            if (fonteUpper.includes('RUDOLPH')) {
+                return '<span class="source-badge source-rudolph">RUDOLPH</span>';
+            } else if (fonteUpper.includes('CMA')) {
+                return '<span class="source-badge source-cma">CMA</span>';
+            } else if (fonteUpper.includes('MWN')) {
+                return '<span class="source-badge source-mwn">MWN</span>';
+            } else if (fonteUpper.includes('CFH')) {
+                return '<span class="source-badge source-cfh">CFH</span>';
+            } else if (fonteUpper.includes('FRASETTO')) {
+                return '<span class="source-badge source-frasetto">FRASETTO</span>';
             }
+            return '<span class="source-badge source-frasetto">FRASETTO</span>';
         }
 
-        function filterByActiveSources(entries) {
-            return entries.filter(entry => activeSources.has(entry.sourceType));
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
-        function createAlphabetBar() {
-            const alphabet = 'ABDEGIJKMNOPRSTU'.split('');
-            const alphabetBar = document.getElementById('alphabetBar');
-            
-            const availableLetters = new Set(
-                allEntries
-                    .filter(entry => activeSources.has(entry.sourceType))
-                    .map(entry => entry.krenak.charAt(0).toUpperCase())
-            );
-            
-            alphabetBar.innerHTML = alphabet.map(letter => {
-                const isAvailable = availableLetters.has(letter);
-                return `<button 
-                    class="letter-btn ${!isAvailable ? 'disabled' : ''}" 
-                    onclick="filterByLetter('${letter}')"
-                    ${!isAvailable ? 'disabled' : ''}
-                >${letter}</button>`;
-            }).join('');
-        }
-
-        function filterByLetter(letter, skipToggle = false) {
-            const searchInput = document.getElementById('searchInput');
-            searchInput.value = '';
-            
-            if (!skipToggle && activeLetter === letter) {
-                activeLetter = null;
-                renderEntries(filterByActiveSources(allEntries));
-            } else {
-                activeLetter = letter;
-                const filtered = allEntries.filter(entry => 
-                    entry.krenak.charAt(0).toUpperCase() === letter &&
-                    activeSources.has(entry.sourceType)
-                );
-                renderEntries(filtered);
-            }
-            
-            document.querySelectorAll('.letter-btn').forEach(btn => {
-                if (btn.textContent === letter && activeLetter === letter) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-        }
-
-        function normalizeEntry(row, sourceConfig, sourceType) {
-            const cols = sourceConfig.columns;
-            return {
-                sourceType: sourceType,
-                sourceName: sourceConfig.name,
-                krenak: (row[cols.krenak] || '').trim(),
-                portuguese: (row[cols.portuguese] || '').trim(),
-                original: cols.original ? (row[cols.original] || '').trim() : '',
-                notes: cols.notes ? (row[cols.notes] || '').trim() : '',
-                source: cols.source ? (row[cols.source] || '').trim() : '',
-                rawData: row
-            };
-        }
-
-        async function loadAllCSVs() {
-            const promises = Object.entries(CSV_SOURCES).map(([sourceType, config]) => {
-                return new Promise((resolve, reject) => {
-                    Papa.parse(config.url, {
-                        download: true,
-                        header: true,
-                        complete: function(results) {
-                            const entries = results.data
-                                .filter(row => {
-                                    const cols = config.columns;
-                                    const krenakWord = row[cols.krenak];
-                                    const portugueseWord = row[cols.portuguese];
-                                    return krenakWord && portugueseWord && 
-                                           krenakWord.trim() !== '' && 
-                                           portugueseWord.trim() !== '';
-                                })
-                                .map(row => normalizeEntry(row, config, sourceType));
-                            console.log(`Loaded ${entries.length} entries from ${config.name}`);
-                            resolve(entries);
-                        },
-                        error: function(error) {
-                            console.error(`Error loading ${config.name}:`, error);
-                            resolve([]);
-                        }
-                    });
-                });
-            });
-
-            const results = await Promise.all(promises);
-            allEntries = results.flat();
-            
-            createAlphabetBar();
-            renderEntries(allEntries);
-        }
-
-        function renderEntries(entries) {
+        function displayEntries(entries) {
             const container = document.getElementById('entriesContainer');
             
             if (entries.length === 0) {
-                container.innerHTML = `
-                    <div class="no-results">
-                        <div class="no-results-icon">🔍</div>
-                        <p>Nenhuma entrada encontrada</p>
+                container.innerHTML = '<div class="no-results">Nenhuma entrada encontrada.</div>';
+                return;
+            }
+
+            container.innerHTML = entries.map(entry => {
+                const hasOrtografia = entry['Ortografia Alternativa'] && entry['Ortografia Alternativa'].trim();
+                const hasNotas = entry.Notas && entry.Notas.trim();
+                const hasFonte = entry.Fonte && entry.Fonte.trim();
+                const hasDetails = hasOrtografia || hasNotas || hasFonte;
+
+                return `
+                    <div class="entry" onclick="toggleEntry(this)">
+                        <div class="entry-header">
+                            <div class="entry-main">
+                                <div class="krenak">${escapeHtml(entry.Krenak)}</div>
+                                <div class="portugues">${escapeHtml(entry.Portugues)}</div>
+                            </div>
+                            ${getSourceBadge(entry.Fonte)}
+                        </div>
+                        ${hasDetails ? `
+                            <div class="entry-details">
+                                ${hasOrtografia ? `
+                                    <div class="detail-row">
+                                        <div class="detail-label">Ortografia Alternativa</div>
+                                        <div class="detail-content">${escapeHtml(entry['Ortografia Alternativa'])}</div>
+                                    </div>
+                                ` : ''}
+                                ${hasNotas ? `
+                                    <div class="detail-row">
+                                        <div class="detail-label">Notas</div>
+                                        <div class="detail-content">${escapeHtml(entry.Notas)}</div>
+                                    </div>
+                                ` : ''}
+                                ${hasFonte ? `
+                                    <div class="detail-row">
+                                        <div class="detail-label">Fonte Completa</div>
+                                        <div class="detail-content">${escapeHtml(entry.Fonte)}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        ` : ''}
                     </div>
                 `;
-                return;
-            }
-
-            container.innerHTML = entries.map((entry, index) => `
-                <div class="entry ${entry.sourceType}" data-index="${index}">
-                    <div class="entry-header" onclick="toggleEntry(${index})">
-                        <div class="entry-main">
-                            <div class="krenak-word">${entry.krenak}</div>
-                            <div class="portuguese">${entry.portuguese}</div>
-                        </div>
-                        <div class="entry-right">
-                            <div class="source-badge ${entry.sourceType}">${entry.sourceName.split(' ')[0]}</div>
-                            <div class="expand-icon">▼</div>
-                        </div>
-                    </div>
-                    <div class="entry-details">
-                        <div class="details-content">
-                            ${entry.krenak ? `
-                                <div class="detail-row">
-                                    <div class="detail-label">Krenak</div>
-                                    <div class="detail-value">${entry.krenak}</div>
-                                </div>
-                            ` : ''}
-                            ${entry.original ? `
-                                <div class="detail-row">
-                                    <div class="detail-label">Ortografia Original</div>
-                                    <div class="detail-value">${entry.original}</div>
-                                </div>
-                            ` : ''}
-                            ${entry.portuguese ? `
-                                <div class="detail-row">
-                                    <div class="detail-label">Português</div>
-                                    <div class="detail-value">${entry.portuguese}</div>
-                                </div>
-                            ` : ''}
-                            ${entry.notes ? `
-                                <div class="detail-row">
-                                    <div class="detail-label">Notas</div>
-                                    <div class="detail-value">${entry.notes}</div>
-                                </div>
-                            ` : ''}
-                            ${entry.source ? `
-                                <div class="detail-row">
-                                    <div class="detail-label">Fonte</div>
-                                    <div class="detail-value">${entry.source}</div>
-                                </div>
-                            ` : ''}
-                            <div class="details-source">
-                                Fonte: ${entry.sourceName}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+            }).join('');
         }
 
-        function toggleEntry(index) {
-            const entry = document.querySelector(`[data-index="${index}"]`);
-            entry.classList.toggle('expanded');
+        function toggleEntry(element) {
+            element.classList.toggle('expanded');
         }
 
-        function searchEntries(query) {
-            const lowerQuery = query.toLowerCase().trim();
-            
-            if (lowerQuery) {
-                activeLetter = null;
-                document.querySelectorAll('.letter-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-            }
-            
-            if (!lowerQuery) {
-                renderEntries(filterByActiveSources(allEntries));
-                return;
-            }
-
-            const filtered = allEntries.filter(entry => 
-                activeSources.has(entry.sourceType) && (
-                    entry.krenak.toLowerCase().includes(lowerQuery) ||
-                    entry.portuguese.toLowerCase().includes(lowerQuery) ||
-                    (entry.original && entry.original.toLowerCase().includes(lowerQuery))
-                )
-            );
-
-            renderEntries(filtered);
-        }
-
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            searchEntries(e.target.value);
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            filterAndDisplay(searchTerm);
         });
 
-        loadAllCSVs();
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+                filterAndDisplay(searchTerm);
+            });
+        });
+
+        function filterAndDisplay(searchTerm) {
+            let filtered = allEntries;
+
+            // Apply source filter
+            if (currentFilter === 'frasetto') {
+                filtered = filtered.filter(entry => 
+                    entry.Fonte && (
+                        entry.Fonte.toUpperCase().includes('FRASETTO') ||
+                        entry.Fonte.toUpperCase().includes('FRASSETTO') ||
+                        entry.Fonte.toUpperCase().includes('CMA') ||
+                        entry.Fonte.toUpperCase().includes('CLARO MONTEIRO') ||
+                        entry.Fonte.toUpperCase().includes('MWN') ||
+                        entry.Fonte.toUpperCase().includes('WIED-NEUWIED') ||
+                        entry.Fonte.toUpperCase().includes('CFH') ||
+                        entry.Fonte.toUpperCase().includes('HARTT')
+                    )
+                );
+            } else if (currentFilter === 'rudolph') {
+                filtered = filtered.filter(entry => 
+                    entry.Fonte && entry.Fonte.toUpperCase().includes('RUDOLPH')
+                );
+            }
+
+            // Apply search filter
+            if (searchTerm) {
+                filtered = filtered.filter(entry => 
+                    (entry.Krenak && entry.Krenak.toLowerCase().includes(searchTerm)) ||
+                    (entry.Portugues && entry.Portugues.toLowerCase().includes(searchTerm))
+                );
+            }
+
+            displayEntries(filtered);
+        }
     </script>
 </body>
 </html>
